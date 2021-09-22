@@ -1,0 +1,12 @@
+.pokeCards {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.loading_gif {
+  margin-left: auto;
+  margin-right: auto;
+}

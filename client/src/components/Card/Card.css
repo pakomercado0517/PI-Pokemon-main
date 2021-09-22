@@ -1,0 +1,25 @@
+.contenedor {
+  border: rgba(63, 63, 63, 0.507) solid 1px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 320px;
+  height: 360px;
+  position: relative;
+  border-radius: 15px;
+  box-shadow: 0 5px 5px 5px hsl(30, 4%, 55%);
+  margin:8px 15px 15px 15px;
+  padding: 10px
+}
+
+.contenedor:hover {
+  width: 300px;
+  height: 340px;
+   box-shadow: 0 8px 8px 8px hsl(30, 4%, 55%);
+}
+
+.pokeSprite {
+  width: 160px;
+  height: 200px;
+  margin-left: 75px;
+}
