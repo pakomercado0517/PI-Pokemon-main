@@ -1,8 +1,11 @@
+import { bindActionCreators } from "redux"
+
 const initialState= {
   pokemons: [],
   allPokemons: [],
   types: [],
   detail: [],
+  pokemonBackup:[],
 }
 
 function rootReducer(state= initialState, action ) {
@@ -90,8 +93,12 @@ function rootReducer(state= initialState, action ) {
       case 'GET_INITIAL_STATE':
         return {
           ...state,
-          detail: []
+          detail:[],
+          types:[],
+          pokemons:[],
+          allPokemons:[]
         }
+
 
       default: return state;
   }

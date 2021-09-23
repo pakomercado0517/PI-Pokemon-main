@@ -9,17 +9,40 @@
   border-radius: 15px;
   box-shadow: 0 5px 5px 5px hsl(30, 4%, 55%);
   margin:8px 15px 15px 15px;
-  padding: 10px
+  padding: 10px;
+  /* background: #233E8B; */
+  text-decoration:none;
+  color:#fff;
+  
 }
 
 .contenedor:hover {
   width: 300px;
   height: 340px;
-   box-shadow: 0 8px 8px 8px hsl(30, 4%, 55%);
+  box-shadow: 0 8px 8px 8px hsl(30, 4%, 55%);
+}
+
+.card_body {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 34px;
+}
+
+.card_body h2 {
+  margin:0;
+  padding:0;
+}
+
+.card_body h3 {
+  margin:0;
+  padding:0;
 }
 
 .pokeSprite {
-  width: 160px;
-  height: 200px;
-  margin-left: 75px;
+  width: 240px;
+  height: 220px;
+  position: relative;
+  left:105px;
 }

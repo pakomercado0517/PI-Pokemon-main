@@ -4,7 +4,7 @@ import './Header.css'
 export default function Header() {
   return(
     <div>
-      <div className='header_logo'><img src='https://fontmeme.com/permalink/210922/bdd84359864d87f577f1261a7fed12ec.png' className='img_header' alt='header_img_title'/></div>
+      <div className='header_logo'><img src='https://fontmeme.com/permalink/210923/1bacbb33417b63efa4eca83ab1fbf090.png' className='img_header' alt='header_img_title'/></div>
     </div>
   )
 }

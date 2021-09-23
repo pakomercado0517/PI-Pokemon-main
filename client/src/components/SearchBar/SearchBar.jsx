@@ -2,6 +2,7 @@ import React, { useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getName } from '../../actions'
 import { useHistory } from 'react-router'
+import './SearchBar.css'
 
 export default function SearchBar() {
   const dispatch= useDispatch()
@@ -27,8 +28,14 @@ export default function SearchBar() {
   }
   return(
     <div>
-      <input type='text' placeholder='Search a Pokémon...' onChange={e=> handleInputChange(e)} />
-      <button type='submit' onClick={e=> handleSubmit(e)} >Search</button>
+      <form className='search_form' onSubmit={e=>e.preventDefault()} role='search'>
+        <div>
+          <input className='search_input' type='search' placeholder='Search a Pokémon...' onChange={e=> handleInputChange(e)} />
+          <button className='search_button' type='submit' onClick={e=> handleSubmit(e)} >Search</button>
+        </div>
+        <div>
+        </div>
+      </form>
     </div>
   )
 }

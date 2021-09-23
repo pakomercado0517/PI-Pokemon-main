@@ -1,7 +1,7 @@
 import React,{ useState, useEffect  } from "react";
 import {Link} from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux'
-import { getPokemons,  filterByType, filterCreated, orderByName, orderByAttack } from "../../actions";
+import { getPokemons,  filterByType, filterCreated, orderByName, orderByAttack, getInitialState } from "../../actions";
 import Card from '../Card/Card'
 import Paging from '../Paging/Paging'
 import SearchBar from '../SearchBar/SearchBar'
@@ -14,6 +14,7 @@ export default function Home() {
   const allPokemons= useSelector(state=> state.pokemons)
   // const types= useSelector(state=> state.types)
   const [order, setOrder]= useState('')
+  const [loading, setLoading]= useState(false)
   const [orderAttack, setOrderAttack]= useState('')
   const [currentPage, setCurrentPage]= useState(1)
   const [pokemonsPerPage]= useState(9)
@@ -25,7 +26,11 @@ export default function Home() {
   }
   
   useEffect(()=> {
-    dispatch(getPokemons())
+    async function getData(){
+      await dispatch(getPokemons())
+      setLoading(true)
+    }
+    getData()
   }, [dispatch])
 
   function handleClick(e) {
@@ -56,24 +61,27 @@ export default function Home() {
     setCurrentPage(1)
     setOrderAttack(`Ordenado ${e.target.value}`)
   }
-  console.log(showPokemons.length)
+  // console.log(showPokemons.length)
   return(
     <div>
       <Header/>
-      <div>
+      <div className='searchBar'>
         <SearchBar/>
+        <Link to='/pokemon'><button className='create_button'>Create a Pokémon</button></Link>
       </div>
       <div>
-        <Link to='/pokemon'><button>Create Pokémon</button></Link>
-        <select onChange={e=> handleSort(e)} >
+        
+      </div>
+      <div className='filter_box'>
+        <select className='select_filter' onChange={e=> handleSort(e)} >
           <option value="asc">Ascending Order</option>
           <option value="desc">Descending Order</option>
         </select>
-        <select onChange={e=> handleSortAttack(e)}>
+        <select className='select_filter' onChange={e=> handleSortAttack(e)}>
           <option value="strong">Stronger Attack</option>
           <option value="weak">Weaker Attack</option>
         </select>
-        <select onChange={e=> handleFilterType(e)} >
+        <select className='select_filter' onChange={e=> handleFilterType(e)} >
           <option value="all">All Types</option>
           <option value="normal">Normal</option>
           <option value="fighting">Fighting</option>
@@ -96,12 +104,13 @@ export default function Home() {
           <option value="unknown">Unknown</option>
           <option value="shadow">Shadow</option>
         </select>
-        <select onChange={e=> handleFilterCreated(e)}>
+        <select className='select_filter' onChange={e=> handleFilterCreated(e)}>
           <option value="all">All Pokémon</option>
           <option value="api">Existing</option>
           <option value="created">Created</option>
         </select>
-        <button onClick={e=> handleClick(e)}>Delete fiters</button>
+        <button className='filter_button' onClick={e=> handleClick(e)}>Delete fiters</button>
+        </div>
         <div>
           {
             showPokemons && 
@@ -116,11 +125,11 @@ export default function Home() {
         </div>
         <div className='pokeCards'>
           {
-            showPokemons.length > 0 ?
+            loading === true ?
             showPokemons.map(el=> {
               return(
                 <div>
-                  <Link to={`/details/${el.id}`} replace >
+                  <Link className='card_link' to={`/details/${el.id}`} >
                     <Card
                     name={el.name}
                     types={el.types.map(e=> e.name + (' '))}
@@ -144,7 +153,6 @@ export default function Home() {
             </div>
           } 
         </div>
-      </div>
     </div>
   )
 }

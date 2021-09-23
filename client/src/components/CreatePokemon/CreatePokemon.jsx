@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from "react-redux";
 import { postPokemon, getTypes } from '../../actions'
-import Pokeball from '../Pokeball/Pokeball';
+// import Pokeball from '../Pokeball/Pokeball';
 
 function validate(el) {
   let errors= {}
@@ -48,7 +48,7 @@ export default function PokemonCreate() {
   function handleSubmit(e) {
     e.preventDefault()
     console.log(input)
-    dispatch(postPokemon(input)) && <div><Pokeball/></div>
+    dispatch(postPokemon(input))
     alert('Pokémon created')
     setInput({
       name:"",

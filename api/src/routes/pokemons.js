@@ -101,7 +101,7 @@ router.get('/:id', async (req,res)=> {
 })
 
 router.post('/', async (req, res)=> {
-  const { name, hp, attack, defense, speed, height, weight, sprite, createInDb}= req.body
+  const { name, hp, attack, defense, speed, height, weight, sprite, createInDb, types}= req.body
 
   try {
     if(name) {
@@ -118,7 +118,7 @@ router.post('/', async (req, res)=> {
       })
       const createDb= await Type.findAll({
         where: {
-          name:name
+          name: types
         }
       })
       createPokemon.addType(createDb)
