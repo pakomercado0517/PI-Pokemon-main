@@ -1,0 +1,94 @@
+.cp_title {
+  font-size: 60px;
+  -webkit-text-stroke: 0.5px blue;
+  color:#ffcc03;
+}
+
+.cp_form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  flex-direction: unset;
+  color: #170055;
+  font-size: 22px;
+}
+
+.cp_input {
+  width: 280px;
+  height: 34px;
+  display: flex;
+  border: 1px solid blue;
+  border-radius: 8px;
+}
+
+.cp_input:focus {
+  outline: 2px solid blue;
+}
+
+.cp_button_create {
+  width: 100px;
+  height: 30px;
+  margin-top: 5px;
+  margin-right: 5px;
+  margin-bottom: 10px;
+  background: #fff;
+  color: #1EAE98;
+  border: 1px solid #1EAE98;
+  border-radius: 6px;
+}
+.cp_button_create:hover {
+  background: #1EAE98;
+  color:white
+}
+
+.cp_button_home {
+  width: 100px;
+  height: 30px;
+  margin-top: 10px;
+  margin-right: 5px;
+  margin-bottom: 10px;
+  background: #fff;
+  color: #170055;
+  border: 1px solid #170055;
+  border-radius: 6px;
+}
+.cp_button_home:hover {
+  background: #170055;
+  color:#fff;
+}
+
+.cp_types_box {
+  display:flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-left: 65px;
+}
+
+.cp_types {
+  width: 180px;
+  height:70px;
+  margin: 5px;
+  color:#fff;
+  border-radius: 8px;
+  margin-left: 50px;
+}
+
+.cp_button_close {
+  width: max-content;
+  height: max-content;
+  position: relative;
+  background: crimson;
+  color: #fff;
+  border-radius:8px;
+  left:79px;
+  bottom:81px;
+}
+
+.cp_poke_image {
+  width: 300px;
+  height: 160px;
+  margin-top: 10%;
+}
+

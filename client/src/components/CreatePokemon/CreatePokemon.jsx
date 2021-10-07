@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from "react-redux";
-import { postPokemon, getTypes } from '../../actions'
-// import Pokeball from '../Pokeball/Pokeball';
+import { postPokemon, getTypes, getNameData } from '../../actions'
+import './CreatePokemon.css'
 
 function validate(el) {
   let errors= {}
@@ -14,6 +14,7 @@ export default function PokemonCreate() {
   const dispatch= useDispatch()
   const history= useHistory()
   const types= useSelector(state=> state.types)
+  const nameData= useSelector(state=> state.pokeNameData)
   const [err, setErr]= useState({})
   const [input, setInput]= useState({
     name:"",
@@ -21,16 +22,16 @@ export default function PokemonCreate() {
     attack:"",
     defense:"",
     speed:"",
-    height:"",
+    height: "",
     weight:"",
-    sprite:"",
+    sprite: "",
     types:[],
   })
 
   function handleChange(e) {
     setInput({
       ...input,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     })
     setErr(validate({
       ...input,
@@ -49,7 +50,6 @@ export default function PokemonCreate() {
     e.preventDefault()
     console.log(input)
     dispatch(postPokemon(input))
-    alert('Pokémon created')
     setInput({
       name:"",
       hp:"",
@@ -58,72 +58,96 @@ export default function PokemonCreate() {
       speed:"",
       height:"",
       weight:"",
-      sprite:"",
+      sprite: "",
       types:[],
     })
-    history.push('/home')
+    history.push('/postpokemon')
   }
 
   function handleDelete(e) {
+    console.log(e.target.name)
     setInput({
       ...input,
-      types: input.types.filter(el => el !== e)
+      types: input.types.filter((el) => el !== e.target.name)
     })
   }
 
   useEffect(()=> {
     dispatch(getTypes())
-  }, [dispatch])
+    const timer = setTimeout(() => {
+      dispatch(getNameData(input.name.toLowerCase()))
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [dispatch, input.name, nameData])
   
+
+  useEffect(()=> {
+    setInput({
+      ...input,
+      sprite: nameData,
+    })
+  },[nameData])
+  
+  console.log('nameData: ', nameData)
   return(
     <div>
-      <h1>Time to create a Pokémon</h1>
-      <form onSubmit={(e)=> handleSubmit(e)}>
-        <label>Name:</label>
-        <input type="text" value={input.name} name="name" onChange={(e)=> handleChange(e)} />
-        {err.name && (
-          <p>{err.name}</p>
-        )}
+      <h1 className='cp_title'>Time to create a Pokémon</h1>
+      <div className='cp_form'>
+        <form onSubmit={(e)=> handleSubmit(e)}>
+          <div>
+            <label>Name: </label>
+            <input className='cp_input' type="text" value={input.name} name="name" onChange={handleChange} />
+            {err.name && (
+              <p>{err.name}</p>
+            )}
 
-        <label>Hp:</label>
-        <input type="number" value={input.hp} name="hp" onChange={(e)=>handleChange(e)} />
+            <label>Hp:</label>
+            <input className='cp_input' type="number" value={input.hp} name="hp" onChange={handleChange} />
 
-        <label>Attack:</label>
-        <input type="number" value={input.attack} name="attack" onChange={(e)=>handleChange(e)} />
+            <label>Attack:</label>
+            <input className='cp_input' type="number" value={input.attack} name="attack" onChange={handleChange} />
 
-        <label>Defense:</label>
-        <input type="number" value={input.defense} name="defense" onChange={(e)=>handleChange(e)} />
+            <label>Defense:</label>
+            <input className='cp_input' type="number" value={input.defense} name="defense" onChange={handleChange} />
 
-        <label>Speed:</label>
-        <input type="number" value={input.speed} name="speed" onChange={(e)=>handleChange(e)} />
+            <label>Speed: </label>
+            <input className='cp_input' type="number" value={input.speed} name="speed" onChange={handleChange} />
 
-        <label>Height:</label>
-        <input type="number" value={input.height} name="height" onChange={(e)=>handleChange(e)} />
+            <label>Height: </label>
+            <input className='cp_input' type="number" value={input.height} name="height" onChange={handleChange} />
 
-        <label>Weight:</label>
-        <input type="number" value={input.weight} name="weight" onChange={(e)=>handleChange(e)} />
+            <label>Weight: </label>
+            <input className='cp_input' type="number" value={input.weight} name="weight" onChange={handleChange} />
 
-        <label>Sprite:</label>
-        <input type="text" value={input.sprite} name="sprite" onChange={(e)=>handleChange(e)} />
+            <label>Sprite: </label>
+            <input className='cp_input' type="text" value={input.sprite} name="sprite" onChange={handleChange}/>
 
-        <label>Types:</label>
-        <select onChange={(e)=> handleSelect(e)} >
-          {types.map(el=> {
-            return <option value={el}>{el}</option>
-          })}
-        </select>
-        <ul>
-          <p>{input.types.map(el=> `${el}, `)}</p>
-        </ul>
-        <button type="submit" >Create</button>
-        <Link to='/home'><button>Return</button></Link>
-      </form>
+            <label>Types <br/> (Maximum 2 types): </label>
+            <select className='cp_input' onChange={(e)=> handleSelect(e)} >
+              {types.map((el)=> {
+                return <option key={el} value={el}>{el}</option>
+              })}
+            </select>
+          </div>
+          <button className='cp_button_create' type="submit" >Create</button>
+          <Link to='/home'><button className='cp_button_home'>Return</button></Link>
+        </form>
 
-      {input.types.map(el=> 
-      <div>
-        <p>{el}</p>
-        <button onClick={(e)=> handleDelete(e)}>x</button>
-      </div>)}
+            {/* Muestro los tiops elegidos... */}
+        <div className='cp_types_box'>
+          {input.types.map((el, index)=> 
+            <div key={index} className={'cp_types ' + el + (' ')}>
+              <p >{el}</p>
+              <button className='cp_button_close' name={el} onClick={handleDelete}>x</button>
+            </div>)
+          }
+          <hr/>
+          <div>
+            <img src={nameData} alt='img_pokemon' className='cp_poke_image' />
+          </div>
+        </div>
+
+      </div>
     </div>
   )
 }

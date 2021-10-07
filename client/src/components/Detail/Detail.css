@@ -6,6 +6,7 @@
   margin-right: auto;
   border-radius: 8px;
   box-shadow: 0 0 5px 4px grey;
+  color: #fff;
 }
 
 .detail_body p {
@@ -25,13 +26,13 @@
   right:148px;
   bottom:40px;
   background: #fff;
-  color: #1EAE98;
-  border: 4px solid #1EAE98;
+  color: #316B83;
+  border: 4px solid #316B83;
   border-radius:8px;
 }
 .detail_goBack:hover {
   width: 78px;
   height: 40px;
-  background: #1EAE98;
+  background: #316B83;
   color: #fff;
 }

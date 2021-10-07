@@ -9,6 +9,7 @@ export default function Detail(props) {
   const pokeId= props.match.params.id
   const dispatch= useDispatch()
   let pokeDetail= useSelector(state=> state.detail)
+  
   useEffect(()=> {
     dispatch(getDetail(pokeId))
     return dispatch(getInitialState())
@@ -24,7 +25,7 @@ export default function Detail(props) {
     <div>
       {
         isNaN(pokeDetail.length) === true ?
-        <div className='container'>
+        <div className={pokeDetail.types.map(el=> el.name + ' ') + ' container'}>
           <div className='detail_body'>
             <h1>{pokeDetail.name}</h1>
             <h3>Types: {pokeDetail.types.map(el=> `[${el.name}] `)}</h3>
@@ -40,7 +41,7 @@ export default function Detail(props) {
             <img src={pokeDetail.sprite} alt='pokemon-img' width='200px' height='220px'/>
           </div>
         </div> :
-        <img src='https://i.gifer.com/Yg6z.gif' alt='loading gif' />
+        <img src='https://images.chesscomfiles.com/uploads/v1/group/76962.73d2aef4.50x50o.05adf4794fcc.gif' alt='loading gif' />
       }
       <Link to='/home'><button className='detail_goBack'>Go Back</button></Link>
     </div>

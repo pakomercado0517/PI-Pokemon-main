@@ -1,37 +1,59 @@
 import React,{ useState, useEffect  } from "react";
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux'
-import { getPokemons,  filterByType, filterCreated, orderByName, orderByAttack, getInitialState } from "../../actions";
+import { getName, getPokemons,  filterByType, filterCreated, orderByName, orderByAttack, getPaginate } from "../../actions";
 import Card from '../Card/Card'
 import Paging from '../Paging/Paging'
 import SearchBar from '../SearchBar/SearchBar'
 import './Home.css'
-import Header from "../Header/Header";
 
 
 export default function Home() {
   const dispatch= useDispatch()
   const allPokemons= useSelector(state=> state.pokemons)
-  // const types= useSelector(state=> state.types)
+  const searchBackup= useSelector(state=> state.searchBackup)
+  const backup= useSelector(state=> state.pokemonBackup)
+  const [pokeName, setPokeName]= useState('')
   const [order, setOrder]= useState('')
   const [loading, setLoading]= useState(false)
   const [orderAttack, setOrderAttack]= useState('')
-  const [currentPage, setCurrentPage]= useState(1)
+  const currentPage= backup===0 ? 1 : backup
   const [pokemonsPerPage]= useState(9)
   const indexLast= currentPage * pokemonsPerPage
   const indexFirst= indexLast - pokemonsPerPage
-  const showPokemons= Array.isArray(allPokemons) && allPokemons.slice(indexFirst, indexLast)
+  const filteredPokemons= useSelector(state => state.filteredPokemons)
+  let pokeCurrents= filteredPokemons.length > 0 
+                    ? filteredPokemons 
+                    : searchBackup 
+                    ? filteredPokemons 
+                    : allPokemons
+                    
+    // console.log('searchBackup: ', searchBackup)      
+    // console.log('pokecurrents: ', pokeCurrents.length)
+    // console.log('filteredPokemons: ', filteredPokemons.length)
+
+  const showPokemons= pokeCurrents.length > 0 ? pokeCurrents.slice(indexFirst, indexLast) : pokeCurrents;
+  // Array.isArray(pokeCurrents) && pokeCurrents.slice(indexFirst, indexLast)
+  // console.log(Array.isArray(pokeCurrents))
+  // console.log(filteredPokemons)
+  console.log(showPokemons)
+  console.log(pokeCurrents)
   const paginate= (page)=> {
-    setCurrentPage(page)
+    dispatch(getPaginate(page))
   }
   
+  
   useEffect(()=> {
-    async function getData(){
-      await dispatch(getPokemons())
+    async function getData() {
       setLoading(true)
+      await dispatch(getPokemons())
+      setLoading(false)
+      // console.log(loading)
     }
     getData()
-  }, [dispatch])
+    }, [dispatch])
+  
+
 
   function handleClick(e) {
     e.preventDefault()
@@ -43,14 +65,15 @@ export default function Home() {
   }
 
   function handleFilterCreated(e) {
+    e.preventDefault()
     dispatch(filterCreated(e.target.value))
   }
 
   function handleSort(e) {
     e.preventDefault()
     dispatch(orderByName(e.target.value))
-    console.log(order)
-    setCurrentPage(1)
+    // console.log(order)
+    // setCurrentPage(1)
     setOrder(`Ordenado ${e.target.value}`)
   }
 
@@ -58,30 +81,44 @@ export default function Home() {
     e.preventDefault()
     dispatch(orderByAttack(e.target.value))
     console.log(orderAttack)
-    setCurrentPage(1)
+    // setCurrentPage(1)
     setOrderAttack(`Ordenado ${e.target.value}`)
   }
-  // console.log(showPokemons.length)
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setLoading(true)
+    await dispatch(getName(pokeName))
+    setLoading(false)
+    
+  }
+
+  function handleInputChange(e){
+    e.preventDefault()
+    setPokeName(e.target.value)
+  }
+
+  
+  console.log(isNaN(showPokemons))
   return(
     <div>
-      <Header/>
       <div className='searchBar'>
-        <SearchBar/>
+        <SearchBar handleSubmit={handleSubmit} handleInputChange={handleInputChange}/>
         <Link to='/pokemon'><button className='create_button'>Create a Pokémon</button></Link>
       </div>
       <div>
         
       </div>
       <div className='filter_box'>
-        <select className='select_filter' onChange={e=> handleSort(e)} >
+        <select className='select_filter' onChange={handleSort} >
           <option value="asc">Ascending Order</option>
           <option value="desc">Descending Order</option>
         </select>
-        <select className='select_filter' onChange={e=> handleSortAttack(e)}>
+        <select className='select_filter' onChange={handleSortAttack}>
           <option value="strong">Stronger Attack</option>
           <option value="weak">Weaker Attack</option>
         </select>
-        <select className='select_filter' onChange={e=> handleFilterType(e)} >
+        <select className='select_filter' onChange={handleFilterType} >
           <option value="all">All Types</option>
           <option value="normal">Normal</option>
           <option value="fighting">Fighting</option>
@@ -104,20 +141,20 @@ export default function Home() {
           <option value="unknown">Unknown</option>
           <option value="shadow">Shadow</option>
         </select>
-        <select className='select_filter' onChange={e=> handleFilterCreated(e)}>
+        <select className='select_filter' onChange={handleFilterCreated}>
           <option value="all">All Pokémon</option>
           <option value="api">Existing</option>
           <option value="created">Created</option>
         </select>
-        <button className='filter_button' onClick={e=> handleClick(e)}>Delete fiters</button>
+        <button className='filter_button' onClick={handleClick}>Delete fiters</button>
         </div>
-        <div>
+        <div className='home_cards'>
           {
             showPokemons && 
             <div>
               <Paging
               pokemonsPerPage={pokemonsPerPage}
-              allPokemons={allPokemons.length}
+              allPokemons={pokeCurrents.length}
               paging={paginate}
               />
             </div>
@@ -125,33 +162,30 @@ export default function Home() {
         </div>
         <div className='pokeCards'>
           {
-            loading === true ?
+            loading 
+            ? 
+            <div className='loading_gif'>
+              <img src='https://images.chesscomfiles.com/uploads/v1/group/76962.73d2aef4.50x50o.05adf4794fcc.gif' alt='loading gif' />
+            </div> 
+            :
+            showPokemons.length > 0 
+            ?
             showPokemons.map(el=> {
               return(
-                <div>
+                <div key={el.id}>
                   <Link className='card_link' to={`/details/${el.id}`} >
                     <Card
                     name={el.name}
-                    types={el.types.map(e=> e.name + (' '))}
+                    types={el.types.map( (e)=> e.name + (' '))}
                     sprite={el.sprite}
-                    key={el.id}
                     />
                   </Link>
                 </div>
               )
-            }) :
-            <div className='loading_gif'>
-              <img src='https://i.gifer.com/Yg6z.gif' alt='loading gif' />
-              {/* <Link to={`/details/${allPokemons.id}`}>
-                <Card
-                name={allPokemons.name}
-                types={allPokemons.types.map(el=> el.name + (' '))}
-                sprite={allPokemons.sprite}
-                key={allPokemons.id}
-                />
-              </Link> */}
-            </div>
-          } 
+            }) 
+            :
+            <h1>Pokemons not finded...</h1> 
+          }
         </div>
     </div>
   )

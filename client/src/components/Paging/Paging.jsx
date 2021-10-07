@@ -1,4 +1,5 @@
 import React from 'react'
+import './Paging.css'
 
 export default function Paging({pokemonsPerPage, allPokemons, paging}) {
   const pageNumbers=[]
@@ -9,7 +10,7 @@ export default function Paging({pokemonsPerPage, allPokemons, paging}) {
   return(
     <div>
       {pageNumbers.length > 1 && pageNumbers.map((el,index)=>(
-        <button key={index} onClick={()=> paging(el)}>{el}</button>
+        <button className='pg_button' key={index} onClick={()=> paging(el)}>{el}</button>
       ))}
     </div>
   )
